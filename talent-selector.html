@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CED Talent Agency - Agent Selector</title>
+    <!-- CED Brand: Aglet Slab Font -->
+    <link href="https://fonts.cdnfonts.com/css/aglet-slab" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,7 +14,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Aglet Slab', 'Roboto Slab', Georgia, serif;
             background: linear-gradient(135deg, #F6F4F8 0%, #EDE9F2 100%);
             min-height: 100vh;
             padding: 20px;
@@ -28,8 +30,8 @@
             margin-bottom: 40px;
             padding: 40px 20px;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(87, 37, 124, 0.1);
+            border-radius: 0px;
+            box-shadow: none;
         }
 
         h1 {
@@ -40,14 +42,14 @@
         }
 
         .tagline {
-            color: #495057;
+            color: #222222;
             font-size: 20px;
             margin-bottom: 30px;
         }
 
         .filters {
             display: flex;
-            gap: 15px;
+            gap: 16px;
             flex-wrap: wrap;
             justify-content: center;
             margin-bottom: 20px;
@@ -88,7 +90,7 @@
             transition: all 0.3s;
             font-size: 16px;
             font-weight: 600;
-            color: #495057;
+            color: #222222;
         }
 
         .filter-btn:hover {
@@ -109,7 +111,7 @@
 
         .stats {
             text-align: center;
-            color: #495057;
+            color: #222222;
             margin-bottom: 30px;
             font-size: 16px;
         }
@@ -117,13 +119,13 @@
         .agents-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
+            gap: 32px;
             margin-bottom: 40px;
         }
 
         .agent-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 0px;
             overflow: hidden;
             transition: all 0.3s;
             cursor: pointer;
@@ -134,7 +136,7 @@
 
         .agent-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(87, 37, 124, 0.2);
+            box-shadow: none;
             border-color: #57257C;
         }
 
@@ -221,7 +223,7 @@
             align-items: center;
             gap: 8px;
             font-size: 14px;
-            color: #495057;
+            color: #222222;
         }
 
         .agent-tags {
@@ -244,16 +246,16 @@
         .no-results {
             text-align: center;
             padding: 60px 20px;
-            color: #495057;
+            color: #222222;
             font-size: 18px;
         }
 
         footer {
             text-align: center;
             padding: 40px 20px;
-            color: #495057;
+            color: #222222;
             background: white;
-            border-radius: 12px;
+            border-radius: 0px;
             margin-top: 40px;
         }
 
@@ -291,7 +293,7 @@
             align-items: center;
             gap: 8px;
             font-size: 14px;
-            color: #495057;
+            color: #222222;
         }
 
         .color-dot {
@@ -374,7 +376,7 @@
 
         .upload-hint {
             font-size: 14px;
-            color: #495057;
+            color: #222222;
         }
 
         .uploaded-file {
@@ -431,7 +433,7 @@
         .remove-file-btn {
             padding: 8px 16px;
             background: #f8f9fa;
-            color: #495057;
+            color: #222222;
             border: 2px solid #EDE9F2;
             border-radius: 6px;
             font-size: 14px;
