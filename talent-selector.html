@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CED Talent Agency - Agent Selector</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #F6F4F8 0%, #EDE9F2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(87, 37, 124, 0.1);
+        }
+
+        h1 {
+            color: #57257C;
+            font-size: 40px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #495057;
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #EDE9F2;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #57257C;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #EDE9F2;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .filter-btn:hover {
+            border-color: #57257C;
+            color: #57257C;
+        }
+
+        .filter-btn:focus {
+            outline: 3px solid #57257C;
+            outline-offset: 2px;
+        }
+
+        .filter-btn.active {
+            background: #57257C;
+            color: white;
+            border-color: #57257C;
+        }
+
+        .stats {
+            text-align: center;
+            color: #495057;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .agent-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 3px solid transparent;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(87, 37, 124, 0.2);
+            border-color: #57257C;
+        }
+
+        .agent-avatar {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            background: #F6F4F8;
+            border-radius: 50%;
+            margin: 30px auto 0;
+            display: block;
+            border: 4px solid #EDE9F2;
+            box-shadow: 0 8px 20px rgba(87, 37, 124, 0.15);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .agent-avatar:hover {
+            transform: scale(1.05);
+            border-color: #57257C;
+            box-shadow: 0 12px 30px rgba(87, 37, 124, 0.3);
+        }
+
+        .agent-avatar-wrapper {
+            position: relative;
+            width: 200px;
+            margin: 30px auto 0;
+        }
+
+        .agent-avatar-wrapper::after {
+            content: '📷';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: #57257C;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .agent-avatar-wrapper:hover::after {
+            opacity: 1;
+        }
+
+        .agent-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .agent-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #57257C;
+            margin-bottom: 5px;
+        }
+
+        .agent-role {
+            font-size: 16px;
+            color: #9C2D8A;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .agent-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .agent-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .agent-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            padding: 4px 12px;
+            background: #EDE9F2;
+            color: #57257C;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #495057;
+            font-size: 18px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #495057;
+            background: white;
+            border-radius: 12px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+
+            .agents-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                justify-content: center;
+            }
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding: 20px;
+            background: #F6F4F8;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .color-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #57257C;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: auto;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .download-btn:hover {
+            background: #9C2D8A;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(87, 37, 124, 0.3);
+        }
+
+        .download-btn:focus {
+            outline: 3px solid #57257C;
+            outline-offset: 2px;
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .upload-zone {
+            margin: 20px auto 30px;
+            padding: 30px;
+            border: 3px dashed #57257C;
+            border-radius: 12px;
+            background: #F6F4F8;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            max-width: 600px;
+        }
+
+        .upload-zone:hover {
+            background: #EDE9F2;
+            border-color: #9C2D8A;
+        }
+
+        .upload-zone.dragging {
+            background: #EDE9F2;
+            border-color: #9C2D8A;
+            transform: scale(1.02);
+        }
+
+        .upload-zone input[type="file"] {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            color: #57257C;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .upload-hint {
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .uploaded-file {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #57257C;
+        }
+
+        .uploaded-file.visible {
+            display: block;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #57257C;
+            flex: 1;
+        }
+
+        .add-agent-btn {
+            padding: 10px 30px;
+            background: #57257C;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-agent-btn:hover {
+            background: #9C2D8A;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(87, 37, 124, 0.3);
+        }
+
+        .add-agent-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .remove-file-btn {
+            padding: 8px 16px;
+            background: #f8f9fa;
+            color: #495057;
+            border: 2px solid #EDE9F2;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .remove-file-btn:hover {
+            background: #EDE9F2;
+            border-color: #57257C;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 CED Talent Agency</h1>
+            <p class="tagline">Professioneel talent voor al je projecten</p>
+
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="uploadZone">
+                <input type="file" id="fileInput" accept=".md">
+                <div class="upload-icon">📤</div>
+                <div class="upload-text">Sleep een agent.md bestand hierheen</div>
+                <div class="upload-hint">of klik om een bestand te selecteren</div>
+            </div>
+
+            <div class="uploaded-file" id="uploadedFile">
+                <div class="file-info">
+                    <span class="file-name" id="fileName">agent.md</span>
+                    <button class="remove-file-btn" id="removeFileBtn">Verwijder</button>
+                    <button class="add-agent-btn" id="addAgentBtn">Agent Toevoegen</button>
+                </div>
+            </div>
+
+            <div class="filters">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="🔍 Zoek op naam, functie of expertise...">
+                </div>
+            </div>
+
+            <div class="filter-group" id="categoryFilters">
+                <button class="filter-btn active" data-filter="all">Alle (11)</button>
+                <button class="filter-btn" data-filter="backend">Backend (3)</button>
+                <button class="filter-btn" data-filter="frontend">Frontend (1)</button>
+                <button class="filter-btn" data-filter="data">Data & Analytics (2)</button>
+                <button class="filter-btn" data-filter="devops">DevOps & Security (2)</button>
+                <button class="filter-btn" data-filter="overig">Overig (3)</button>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <span class="color-dot" style="background: #57257C;"></span>
+                    <span>Backend/Database</span>
+                </div>
+                <div class="legend-item">
+                    <span class="color-dot" style="background: #24BEDF;"></span>
+                    <span>Frontend/UI</span>
+                </div>
+                <div class="legend-item">
+                    <span class="color-dot" style="background: #9C2D8A;"></span>
+                    <span>Design/Marketing</span>
+                </div>
+                <div class="legend-item">
+                    <span class="color-dot" style="background: #1EA1BD;"></span>
+                    <span>DevOps/Security</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="stats" id="stats">
+            Toont <strong id="visibleCount">11</strong> van <strong>11</strong> agents
+        </div>
+
+        <div class="agents-grid" id="agentsGrid">
+            <!-- Agents will be inserted here by JavaScript -->
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            <p>😕 Geen agents gevonden met deze criteria.</p>
+            <p>Probeer andere filters of zoekwoorden.</p>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 CED Talent Agency | Alle rechten voorbehouden</p>
+            <p style="margin-top: 10px; font-size: 14px;">Powered by Claude Code 🤖</p>
+        </footer>
+    </div>
+
+    <script>
+        // Default agents
+        const defaultAgents = [
+            {
+                name: "Sophie van der Berg",
+                role: "Agent Selector",
+                age: 38,
+                location: "Amsterdam",
+                avatar: "agents/avatars/sophie-van-der-berg.jpg",
+                emoji: "🎯",
+                color: "#57257C",
+                category: "overig",
+                expertise: ["Talent matching", "Project analyse", "Coördinatie"],
+                description: "Strategisch denker en matchmaker met overzicht van alle beschikbare talent",
+                mdFile: "agents/import/agent-selector.md"
+            },
+            {
+                name: "Lars Visser",
+                role: "API Developer",
+                age: 31,
+                location: "Utrecht",
+                avatar: "agents/avatars/lars-visser.jpg",
+                emoji: "💻",
+                color: "#24BEDF",
+                category: "backend",
+                expertise: ["FastAPI", "Python", "RESTful APIs", "SQLAlchemy"],
+                description: "Gedisciplineerde backend developer die hecht aan best practices",
+                mdFile: "agents/import/api-developer.md"
+            },
+            {
+                name: "Vera Janssen",
+                role: "Beleidsschrijver",
+                age: 45,
+                location: "Den Haag",
+                avatar: "agents/avatars/vera-janssen.jpg",
+                emoji: "📋",
+                color: "#57257C",
+                category: "overig",
+                expertise: ["Beleidsnota's", "Strategische documenten", "Rapporten"],
+                description: "Ervaren beleidsadviseur die complexe materie vertaalt naar heldere documenten",
+                mdFile: "agents/import/beleidsschrijver.md"
+            },
+            {
+                name: "Emma de Vries",
+                role: "CED Brand Checker",
+                age: 29,
+                location: "Amsterdam",
+                avatar: "agents/avatars/emma-de-vries.jpg",
+                emoji: "🎨",
+                color: "#9C2D8A",
+                category: "overig",
+                expertise: ["Brand compliance", "Design review", "Visual design"],
+                description: "Scherp oog voor detail, gepassioneerd over merkidentiteit",
+                mdFile: "agents/import/ced-brand-checker.md"
+            },
+            {
+                name: "Thomas Bakker",
+                role: "Database Architect",
+                age: 36,
+                location: "Eindhoven",
+                avatar: "agents/avatars/thomas-bakker.png",
+                emoji: "🗄️",
+                color: "#1EA1BD",
+                category: "backend",
+                expertise: ["PostgreSQL", "SQLAlchemy", "Data modeling", "Query optimalisatie"],
+                description: "Systematische denker die complexe datastructuren ontwerpt",
+                mdFile: "agents/import/database-architect.md"
+            },
+            {
+                name: "Mark van Dijk",
+                role: "DevOps Engineer",
+                age: 33,
+                location: "Rotterdam",
+                avatar: "agents/avatars/mark-van-dijk.jpg",
+                emoji: "🐳",
+                color: "#1EA1BD",
+                category: "devops",
+                expertise: ["Docker", "Nginx", "Deployment", "Server monitoring"],
+                description: "Pragmatische engineer die infrastructuur betrouwbaar maakt",
+                mdFile: "agents/import/devops-engineer.md"
+            },
+            {
+                name: "Nina Meijer",
+                role: "Frontend Builder",
+                age: 27,
+                location: "Amsterdam",
+                avatar: "agents/avatars/nina-meijer.jpg",
+                emoji: "🎨💻",
+                color: "#24BEDF",
+                category: "frontend",
+                expertise: ["Jinja2", "JavaScript", "Plotly", "CED branding"],
+                description: "Combineert technische skills met scherp oog voor design",
+                mdFile: "agents/import/frontend-builder.md"
+            },
+            {
+                name: "Ingrid Hendriks",
+                role: "Data Analist",
+                age: 42,
+                location: "Amstelveen",
+                avatar: "agents/avatars/ingrid-hendriks.jpg",
+                emoji: "📊",
+                color: "#57257C",
+                category: "data",
+                expertise: ["Power BI", "Excel", "DAX", "Data visualisatie"],
+                description: "Gepassioneerd over data democratisering",
+                mdFile: "agents/import/ingrid.md"
+            },
+            {
+                name: "Pascal de Groot",
+                role: "Online Marketeer",
+                age: 34,
+                location: "Amsterdam",
+                avatar: "agents/avatars/pascal-de-groot.jpg",
+                emoji: "📈",
+                color: "#24BEDF",
+                category: "data",
+                expertise: ["Google Analytics", "Looker", "SEO", "Microsoft Clarity"],
+                description: "Enthousiast over analytics, combineert data met inzichten",
+                mdFile: "agents/import/online-marketeer.md"
+            },
+            {
+                name: "Pieter Vermeer",
+                role: "Security Auditor",
+                age: 39,
+                location: "Utrecht",
+                avatar: "agents/avatars/pieter-vermeer.jpg",
+                emoji: "🔒",
+                color: "#57257C",
+                category: "devops",
+                expertise: ["OWASP Top 10", "JWT security", "Vulnerability scanning"],
+                description: "Waakzaam en precies, heeft een neus voor security issues",
+                mdFile: "agents/import/security-auditor.md"
+            },
+            {
+                name: "Lisa Koolen",
+                role: "Test Engineer",
+                age: 30,
+                location: "Groningen",
+                avatar: "agents/avatars/lisa-koolen.jpg",
+                emoji: "✅",
+                color: "#24BEDF",
+                category: "backend",
+                expertise: ["pytest", "FastAPI testing", "Test coverage", "CI/CD"],
+                description: "Grondig en methodisch, goede tests zijn de basis",
+                mdFile: "agents/import/test-engineer.md"
+            }
+        ];
+
+        // LocalStorage functions
+        const STORAGE_KEY = 'ced_agency_agents';
+
+        function saveAgents() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(agents));
+                console.log('✅ Agents opgeslagen in localStorage');
+            } catch (error) {
+                console.error('❌ Fout bij opslaan agents:', error);
+            }
+        }
+
+        function loadAgents() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const loadedAgents = JSON.parse(saved);
+                    console.log(`✅ ${loadedAgents.length} agents geladen uit localStorage`);
+                    return loadedAgents;
+                }
+            } catch (error) {
+                console.error('❌ Fout bij laden agents:', error);
+            }
+            console.log('📋 Gebruik default agents');
+            return [...defaultAgents];
+        }
+
+        // Load agents from localStorage or use defaults
+        let agents = loadAgents();
+
+        let currentFilter = 'all';
+        let currentSearch = '';
+
+        function renderAgents() {
+            const grid = document.getElementById('agentsGrid');
+            const noResults = document.getElementById('noResults');
+
+            const filtered = agents.filter(agent => {
+                const matchesCategory = currentFilter === 'all' || agent.category === currentFilter;
+                const matchesSearch = currentSearch === '' ||
+                    agent.name.toLowerCase().includes(currentSearch) ||
+                    agent.role.toLowerCase().includes(currentSearch) ||
+                    agent.expertise.some(e => e.toLowerCase().includes(currentSearch)) ||
+                    agent.location.toLowerCase().includes(currentSearch);
+
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+            } else {
+                grid.style.display = 'grid';
+                noResults.style.display = 'none';
+            }
+
+            grid.innerHTML = filtered.map((agent, index) => `
+                <div class="agent-card">
+                    <div class="agent-avatar-wrapper">
+                        <img src="${agent.avatar}" alt="${agent.name}" class="agent-avatar"
+                             data-agent-name="${agent.name}"
+                             onclick="event.stopPropagation(); changeAvatar('${agent.name}')"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22320%22%3E%3Crect width=%22320%22 height=%22320%22 fill=%22%23F6F4F8%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2264%22%3E${agent.emoji}%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="agent-info">
+                        <div class="agent-name">${agent.emoji} ${agent.name}</div>
+                        <div class="agent-role">${agent.role}</div>
+                        <div class="agent-details">
+                            <div class="agent-detail">
+                                <span>📍</span>
+                                <span>${agent.location}</span>
+                            </div>
+                            <div class="agent-detail">
+                                <span>🎂</span>
+                                <span>${agent.age} jaar</span>
+                            </div>
+                        </div>
+                        <p style="font-size: 14px; color: #495057; margin-top: 10px;">
+                            ${agent.description}
+                        </p>
+                        <div class="agent-tags">
+                            ${agent.expertise.map(skill => `<span class="tag">${skill}</span>`).join('')}
+                        </div>
+                        <button class="download-btn" onclick="event.stopPropagation(); downloadAgent('${agent.mdFile}', '${agent.name}')">
+                            📥 Download Agent
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('visibleCount').textContent = filtered.length;
+        }
+
+        function selectAgent(name) {
+            const agent = agents.find(a => a.name === name);
+            alert(`✅ Je hebt ${agent.name} geselecteerd!\n\n` +
+                  `${agent.emoji} ${agent.role}\n` +
+                  `📍 ${agent.location}\n\n` +
+                  `Expertise: ${agent.expertise.join(', ')}\n\n` +
+                  `${agent.description}`);
+        }
+
+        async function downloadAgent(mdFile, agentName) {
+            try {
+                const response = await fetch(mdFile);
+                if (!response.ok) {
+                    throw new Error('Kan agent bestand niet laden');
+                }
+                const content = await response.text();
+
+                // Maak een blob van de content
+                const blob = new Blob([content], { type: 'text/markdown' });
+                const url = window.URL.createObjectURL(blob);
+
+                // Maak een download link en klik erop
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = mdFile.split('/').pop(); // Gebruik de originele bestandsnaam
+                document.body.appendChild(a);
+                a.click();
+
+                // Cleanup
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+                console.log(`✅ ${agentName} gedownload!`);
+            } catch (error) {
+                console.error('Download fout:', error);
+                alert('⚠️ Download mislukt. Controleer of het agent bestand beschikbaar is.');
+            }
+        }
+
+        // Upload functionality
+        let uploadedFileContent = null;
+        let uploadedFileName = null;
+
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const uploadedFileDiv = document.getElementById('uploadedFile');
+        const fileNameSpan = document.getElementById('fileName');
+        const addAgentBtn = document.getElementById('addAgentBtn');
+        const removeFileBtn = document.getElementById('removeFileBtn');
+
+        // Click to upload
+        uploadZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        });
+
+        // Drag and drop
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragging');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragging');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragging');
+
+            const file = e.dataTransfer.files[0];
+            if (file && file.name.endsWith('.md')) {
+                handleFile(file);
+            } else {
+                alert('⚠️ Upload alleen .md bestanden');
+            }
+        });
+
+        // Handle file upload
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedFileContent = e.target.result;
+                uploadedFileName = file.name;
+                fileNameSpan.textContent = file.name;
+                uploadZone.style.display = 'none';
+                uploadedFileDiv.classList.add('visible');
+            };
+            reader.readAsText(file);
+        }
+
+        // Remove file
+        removeFileBtn.addEventListener('click', () => {
+            uploadedFileContent = null;
+            uploadedFileName = null;
+            fileInput.value = '';
+            uploadZone.style.display = 'block';
+            uploadedFileDiv.classList.remove('visible');
+        });
+
+        // Parse markdown frontmatter
+        function parseMarkdown(content) {
+            const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---/;
+            const match = content.match(frontmatterRegex);
+
+            const agent = {
+                name: '',
+                role: '',
+                expertise: [],
+                description: '',
+                category: 'overig',
+                emoji: '🤖',
+                color: '#57257C'
+            };
+
+            if (match) {
+                const frontmatter = match[1];
+                const lines = frontmatter.split('\n');
+
+                lines.forEach(line => {
+                    const [key, ...valueParts] = line.split(':');
+                    const value = valueParts.join(':').trim();
+
+                    if (key && value) {
+                        const cleanKey = key.trim().toLowerCase();
+
+                        if (cleanKey === 'name' || cleanKey === 'naam') {
+                            agent.name = value.replace(/['"]/g, '');
+                        } else if (cleanKey === 'role' || cleanKey === 'functie') {
+                            agent.role = value.replace(/['"]/g, '');
+                        } else if (cleanKey === 'expertise' || cleanKey === 'skills') {
+                            agent.expertise = value.replace(/[\[\]'"]/g, '').split(',').map(s => s.trim());
+                        } else if (cleanKey === 'description' || cleanKey === 'beschrijving') {
+                            agent.description = value.replace(/['"]/g, '');
+                        } else if (cleanKey === 'category' || cleanKey === 'categorie') {
+                            agent.category = value.replace(/['"]/g, '').toLowerCase();
+                        } else if (cleanKey === 'emoji') {
+                            agent.emoji = value.replace(/['"]/g, '');
+                        } else if (cleanKey === 'color' || cleanKey === 'kleur') {
+                            agent.color = value.replace(/['"]/g, '');
+                        }
+                    }
+                });
+            }
+
+            // Extract from content if frontmatter is missing
+            if (!agent.name) {
+                const nameMatch = content.match(/^#\s+(.+)$/m);
+                if (nameMatch) agent.name = nameMatch[1];
+            }
+
+            if (!agent.role) {
+                const roleMatch = content.match(/\*\*Role?:\*\*\s*(.+)$/m);
+                if (roleMatch) agent.role = roleMatch[1];
+            }
+
+            return agent;
+        }
+
+        // Nederlandse steden voor random selectie
+        const dutchCities = [
+            'Amsterdam', 'Rotterdam', 'Den Haag', 'Utrecht', 'Eindhoven',
+            'Groningen', 'Tilburg', 'Almere', 'Breda', 'Nijmegen',
+            'Apeldoorn', 'Haarlem', 'Arnhem', 'Zaanstad', 'Amersfoort',
+            'Leiden', 'Maastricht', 'Dordrecht', 'Zoetermeer', 'Zwolle',
+            'Deventer', 'Delft', 'Alkmaar', 'Heerlen', 'Venlo'
+        ];
+
+        // Fetch random avatar from ThisPersonDoesNotExist.com
+        async function fetchRandomUser(gender = null) {
+            try {
+                // Get random Dutch city
+                const randomCity = dutchCities[Math.floor(Math.random() * dutchCities.length)];
+
+                // Generate random age between 25 and 55
+                const randomAge = Math.floor(Math.random() * 30) + 25;
+
+                // Fetch avatar from ThisPersonDoesNotExist.com
+                // Add timestamp to prevent caching and get different images
+                const timestamp = new Date().getTime();
+                const avatarUrl = `https://thispersondoesnotexist.com/?${timestamp}`;
+
+                // Convert to base64 to store in localStorage
+                const response = await fetch(avatarUrl);
+                const blob = await response.blob();
+
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        resolve({
+                            avatar: reader.result,
+                            age: randomAge,
+                            location: randomCity
+                        });
+                    };
+                    reader.readAsDataURL(blob);
+                });
+            } catch (error) {
+                console.error('ThisPersonDoesNotExist.com fout:', error);
+                // Fallback
+                const randomCity = dutchCities[Math.floor(Math.random() * dutchCities.length)];
+                return {
+                    avatar: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22320%22%3E%3Crect width=%22320%22 height=%22320%22 fill=%22%23F6F4F8%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2264%22%3E🤖%3C/text%3E%3C/svg%3E',
+                    age: Math.floor(Math.random() * 30) + 25,
+                    location: randomCity
+                };
+            }
+        }
+
+        // Add agent button
+        addAgentBtn.addEventListener('click', async () => {
+            if (!uploadedFileContent) return;
+
+            addAgentBtn.disabled = true;
+            addAgentBtn.textContent = 'Agent toevoegen...';
+
+            try {
+                // Parse the markdown
+                const agentData = parseMarkdown(uploadedFileContent);
+
+                // Fetch random user data
+                const userData = await fetchRandomUser();
+
+                // Create new agent
+                const newAgent = {
+                    name: agentData.name || 'Nieuwe Agent',
+                    role: agentData.role || 'Specialist',
+                    age: userData.age,
+                    location: userData.location,
+                    avatar: userData.avatar,
+                    emoji: agentData.emoji,
+                    color: agentData.color,
+                    category: agentData.category,
+                    expertise: agentData.expertise.length > 0 ? agentData.expertise : ['Algemeen'],
+                    description: agentData.description || 'Professionele specialist',
+                    mdFile: `agents/import/${uploadedFileName}`
+                };
+
+                // Add to agents array
+                agents.push(newAgent);
+
+                // Save to localStorage
+                saveAgents();
+
+                // Update filter counts
+                updateFilterCounts();
+
+                // Reset upload
+                uploadedFileContent = null;
+                uploadedFileName = null;
+                fileInput.value = '';
+                uploadZone.style.display = 'block';
+                uploadedFileDiv.classList.remove('visible');
+
+                // Re-render
+                renderAgents();
+
+                // Success message
+                alert(`✅ ${newAgent.name} succesvol toegevoegd aan het team!`);
+
+            } catch (error) {
+                console.error('Fout bij toevoegen agent:', error);
+                alert('⚠️ Er is een fout opgetreden bij het toevoegen van de agent.');
+            } finally {
+                addAgentBtn.disabled = false;
+                addAgentBtn.textContent = 'Agent Toevoegen';
+            }
+        });
+
+        // Update filter counts
+        function updateFilterCounts() {
+            const counts = {
+                all: agents.length,
+                backend: agents.filter(a => a.category === 'backend').length,
+                frontend: agents.filter(a => a.category === 'frontend').length,
+                data: agents.filter(a => a.category === 'data').length,
+                devops: agents.filter(a => a.category === 'devops').length,
+                overig: agents.filter(a => a.category === 'overig').length
+            };
+
+            document.querySelector('[data-filter="all"]').textContent = `Alle (${counts.all})`;
+            document.querySelector('[data-filter="backend"]').textContent = `Backend (${counts.backend})`;
+            document.querySelector('[data-filter="frontend"]').textContent = `Frontend (${counts.frontend})`;
+            document.querySelector('[data-filter="data"]').textContent = `Data & Analytics (${counts.data})`;
+            document.querySelector('[data-filter="devops"]').textContent = `DevOps & Security (${counts.devops})`;
+            document.querySelector('[data-filter="overig"]').textContent = `Overig (${counts.overig})`;
+
+            document.querySelector('#stats strong:last-child').textContent = counts.all;
+        }
+
+        // Avatar change functionality
+        function changeAvatar(agentName) {
+            // Create a hidden file input
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/png, image/jpeg, image/jpg, image/gif, image/webp, image/svg+xml';
+
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // Check if it's an image
+                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp', 'image/svg+xml'];
+                if (!validTypes.includes(file.type) && !file.type.startsWith('image/')) {
+                    alert('⚠️ Selecteer een geldig afbeeldingsbestand (PNG, JPG, GIF, WebP, SVG)');
+                    return;
+                }
+
+                // Read the file as data URL
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const newAvatarUrl = event.target.result;
+
+                    // Find and update the agent in the array
+                    const agent = agents.find(a => a.name === agentName);
+                    if (agent) {
+                        agent.avatar = newAvatarUrl;
+
+                        // Save to localStorage
+                        saveAgents();
+
+                        // Re-render to show the new avatar
+                        renderAgents();
+
+                        console.log(`✅ Avatar voor ${agentName} bijgewerkt!`);
+                    }
+                };
+                reader.readAsDataURL(file);
+            };
+
+            // Trigger the file dialog
+            input.click();
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            currentSearch = e.target.value.toLowerCase();
+            renderAgents();
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderAgents();
+            });
+        });
+
+        // Initial render
+        renderAgents();
+        updateFilterCounts();
+    </script>
+</body>
+</html>
